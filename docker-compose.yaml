@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  database:
+    image: postgres:10.6
+    ports:
+      - '5440:5432'
+    environment:
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=demo
+      - POSTGRES_DB=demo
+    volumes:
+      - demodb:/var/lib/postgresql/data
+    networks:
+      - demo
+volumes:
+  demodb:
+networks:
+  demo:
+    driver: bridge
