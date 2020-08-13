@@ -15,6 +15,17 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_SUBJECT_PREFIX = '[TEST]'
     MAIL_SENDER_DEFAULT = 'FLASK DEVELOPMENT <flask@example.com>'
+    OAUTH_CREDENTIALS = {
+        'github': {
+            'client_id': os.environ.get('GITHUB_CLIENT_ID'),
+            'client_secret': os.environ.get('GITHUB_CLIENT_SECRET')
+        },
+        'google': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+            'client_secret': os.environ.get('GOOGLE_CLIENT_SECRET')
+        }
+    }
+    OAUTHLIB_INSECURE_TRANSPORT='1'
 
     @staticmethod
     def init_app(app):

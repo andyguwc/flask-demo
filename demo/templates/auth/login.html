@@ -11,5 +11,8 @@
     {{ wtf.quick_form(form) }}
     <p>Forgot your password? <a href="{{ url_for('auth.password_reset_request') }}">Click here to reset it</a>.</p>
     <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
+    <p>OAuth Login <a href="{{ url_for('auth.oauth_login', provider='github') }}">Sign in with Github</a>.</p>
+    <p>OAuth Login <a href="{{ url_for('auth.oauth_login', provider='google') }}">Sign in with Google</a>.</p>
+
 </div>
 {% endblock %}

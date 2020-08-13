@@ -1,11 +1,14 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, session, current_app
 from flask_login import current_user, login_user, logout_user, login_required
+from requests_oauthlib import OAuth2Session
+from flask.json import jsonify
 
 from . import auth_bp
 from .forms import RegistrationForm, LoginForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 from demo.models import User
 from demo.app import db
 from demo.utils.email import send_email
+from demo.utils.oauth import provider_class_map
 
 
 # filtering unconfirmed accounts 
@@ -187,4 +190,35 @@ def change_email(token):
         flash('Your email address has been updated.')
     else:
         flash('Invalid request.')
+    return redirect(url_for('main.index'))
+
+
+# implement oauth2 below
+# using github as an example
+@auth_bp.route('/login/<provider>')
+def oauth_login(provider):
+    """OAuth authorize redirect to request the provider oauth endpoint
+    """
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    # initialize provider wrapper
+    oauth = provider_class_map[provider]()
+    return oauth.authorize()
+
+
+@auth_bp.route('/login/callback/<provider>')
+def oauth_callback(provider):
+    """Callback route, saves token in session and extract user information
+    """
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    oauth = provider_class_map[provider]()
+    email, username = oauth.callback()
+    # if user with email already exists, then don't create new user 
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        user = User(email=email, username=username, confirmed=True)
+        db.session.add(user)
+        db.session.commit()
+    login_user(user, remember=True)
     return redirect(url_for('main.index'))
