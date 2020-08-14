@@ -11,7 +11,7 @@ if os.path.exists(dotenv_path):
     print(dotenv_path)
     load_dotenv(dotenv_path)
 
-app = create_app(os.getenv('FLASK_CONFIG', 'default'))
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
 migrate = Migrate(app, db)
 

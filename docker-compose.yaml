@@ -12,6 +12,11 @@ services:
       - demodb:/var/lib/postgresql/data
     networks:
       - demo
+  redis:
+    image: redis:alpine
+    networks:
+      - demo
+
 volumes:
   demodb:
 networks:

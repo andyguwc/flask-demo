@@ -1,4 +1,4 @@
-Dear {{ user.username }},
+Dear {{ username }},
 
 Welcome to Demo App!
 
