@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, jsonify
 
 from . import main_bp
 from demo.models import User
-from demo.app import db
+from demo.extensions import db
 from demo.tasks.long_task import long_task
 
 @main_bp.route('/')

@@ -1,12 +1,11 @@
 from flask import render_template, redirect, request, url_for, flash, session, current_app
 from flask_login import current_user, login_user, logout_user, login_required
 from requests_oauthlib import OAuth2Session
-from flask.json import jsonify
 
 from . import auth_bp
 from .forms import RegistrationForm, LoginForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 from demo.models import User
-from demo.app import db
+from demo.extensions import db
 from demo.tasks.email import send_email
 from demo.utils.oauth import provider_class_map
 

@@ -1,8 +1,7 @@
 from flask import current_app, render_template
 from flask_mail import Message
 
-from demo.app import mail
-from demo.extensions import celery
+from demo.extensions import mail, celery
 
 @celery.task
 def send_async_email(email_data):

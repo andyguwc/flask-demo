@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os 
-from demo.app import create_app, db
+from demo.app import create_app
+from demo.extensions import db
 from demo.models import User
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
