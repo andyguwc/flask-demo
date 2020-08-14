@@ -7,7 +7,7 @@ from . import auth_bp
 from .forms import RegistrationForm, LoginForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 from demo.models import User
 from demo.app import db
-from demo.utils.email import send_email
+from demo.tasks.email import send_email
 from demo.utils.oauth import provider_class_map
 
 
