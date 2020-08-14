@@ -2,9 +2,10 @@ from threading import Thread
 from flask import current_app, render_template
 from flask_mail import Message
 
-from demo.app import mail, celery
+from demo.app import mail
+from demo.extensions import celery
 
-@celery.task
+@celery.task()
 def send_async_email(kwargs):
     msg = Message(kwargs['subject'], sender=kwargs['sender'], recipients=kwargs['recipients'])
     msg.html = render_template(kwargs['template'] + '.txt', **kwargs)
