@@ -3,3 +3,4 @@ __pycache__/
 .env
 dev
 .bash_history
+.python_history

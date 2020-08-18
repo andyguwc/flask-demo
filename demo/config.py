@@ -15,6 +15,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_SUBJECT_PREFIX = '[TEST]'
     MAIL_SENDER_DEFAULT = 'FLASK DEVELOPMENT <flask@example.com>'
+    DEMO_ADMIN = os.environ.get('DEMO_ADMIN')
     OAUTH_CREDENTIALS = {
         'github': {
             'client_id': os.environ.get('GITHUB_CLIENT_ID'),

@@ -4,10 +4,23 @@ from . import main_bp
 from demo.models import User
 from demo.extensions import db
 from demo.tasks.long_task import long_task
+from demo.utils.auth import admin_required, moderate_required
+from flask_login import login_required
 
 @main_bp.route('/')
 def index():
     return render_template('main/index.html')
+
+
+"""
+Routes below are for testing purposes
+"""
+
+@main_bp.route('/admin')
+@login_required
+@admin_required
+def for_admins_only():
+    return 'Admin Only'
 
 # test route for long running tasks
 @main_bp.route('/longtask', methods=['POST'])
