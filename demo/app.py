@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 from demo.config import config
-from demo.extensions import db, bootstrap, mail, login_manager, migrate, celery
+from demo.extensions import db, bootstrap, mail, login_manager, migrate, celery, moment
 from demo.utils.celery import init_celery
 
 
@@ -28,5 +28,6 @@ def configure_extensions(app):
     login_manager.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
-
+    moment.init_app(app)
+    
     login_manager.login_view = 'auth.login'

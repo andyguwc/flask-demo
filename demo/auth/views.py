@@ -13,11 +13,13 @@ from demo.utils.oauth import provider_class_map
 # filtering unconfirmed accounts 
 @auth_bp.before_app_request
 def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.blueprint != 'auth' \
-            and request.blueprint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint \
+                and request.blueprint != 'auth' \
+                and request.blueprint != 'static':
+            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])

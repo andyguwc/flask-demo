@@ -1,16 +1,42 @@
-from flask import render_template, redirect, request, url_for, jsonify
+from flask import render_template, redirect, request, url_for, jsonify, flash
+from flask_login import login_required, current_user
 
 from . import main_bp
+from .forms import EditProfileForm
 from demo.models import User
 from demo.extensions import db
 from demo.tasks.long_task import long_task
 from demo.utils.auth import admin_required, moderate_required
-from flask_login import login_required
+
 
 @main_bp.route('/')
 def index():
     return render_template('main/index.html')
 
+
+@main_bp.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('main/user.html', user=user)
+
+
+@main_bp.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.location = form.location.data
+        current_user.about_me = form.about_me.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+        flash('Your profile has been updated')
+        return redirect(url_for('main.user', username=current_user.username))
+    # initialize fields as current data
+    form.name.data = current_user.name
+    form.location.data = current_user.location
+    form.about_me.data = current_user.about_me
+    return render_template('main/edit_profile.html', form=form)
 
 """
 Routes below are for testing purposes
