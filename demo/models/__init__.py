@@ -1,1 +1,3 @@
-from .users import User, Role, Permission
+from .users import User
+from .roles import Role, Permission
+from .posts import Post

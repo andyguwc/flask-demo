@@ -1,5 +1,5 @@
 build:
-	@docker build . --rm -t demo
+	@docker build . --rm --build-arg FLASK_ENV=development -t demo
 
 start:
 	@docker-compose up -d
