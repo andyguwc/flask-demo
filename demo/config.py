@@ -46,8 +46,18 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    pass
+    FLASK_ENV = 'production'
 
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+        
+        # log to stderr
+        import logging
+        from logging import StreamHandler
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
 
 config = {
     'development': DevelopmentConfig,
