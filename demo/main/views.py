@@ -1,5 +1,6 @@
 from flask import render_template, redirect, request, url_for, jsonify, flash, abort, current_app
 from flask_login import login_required, current_user
+from flask_sqlalchemy import get_debug_queries
 
 from . import main_bp
 from .forms import EditProfileForm, PostForm, EditPostForm
@@ -8,6 +9,15 @@ from demo.extensions import db
 from demo.tasks.long_task import long_task
 from demo.utils.auth import admin_required, moderate_required
 
+
+# database query performance
+@main_bp.after_app_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= current_app.config['SLOW_DB_QUERY_TIME']:
+            current_app.logger.warning(
+                'Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' % (query.statement, query.parameters, query.duration, query.context))
+    return response
 
 @main_bp.route('/', methods=['GET', 'POST'])
 def index():

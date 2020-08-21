@@ -30,6 +30,7 @@ class Config:
     CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
     CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
     POSTS_PER_PAGE = 20
+    SLOW_DB_QUERY_TIME = 1
 
     @staticmethod
     def init_app(app):
