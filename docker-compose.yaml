@@ -39,6 +39,7 @@ services:
     <<: *demo
   worker:
     command: 'celery worker -A demo.celery_worker.celery --loglevel=info'
+    restart: always
     depends_on:
       - database
       - redis

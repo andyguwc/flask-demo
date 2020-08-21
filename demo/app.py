@@ -13,9 +13,10 @@ def create_app(config_name='default'):
 
     configure_extensions(app)
 
-    from demo import main, auth
+    from demo import main, auth, api
     app.register_blueprint(main.main_bp)
     app.register_blueprint(auth.auth_bp, url_prefix='/auth')
+    app.register_blueprint(api.api_bp, url_prefix='/api/v1')
 
     init_celery(celery, app)
 
