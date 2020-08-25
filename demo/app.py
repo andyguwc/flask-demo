@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import stripe
+
 from flask import Flask
 
 import demo.commands as commands
+
 from demo.config import config
 from demo.extensions import db, bootstrap, mail, login_manager, migrate, celery, moment
 from demo.utils.celery import init_celery
@@ -15,10 +18,11 @@ def create_app(config_name='default'):
 
     register_extensions(app)
 
-    from demo import main, auth, api
+    from demo import main, auth, api, billing
     app.register_blueprint(main.main_bp)
     app.register_blueprint(auth.auth_bp, url_prefix='/auth')
     app.register_blueprint(api.api_bp, url_prefix='/api/v1')
+    app.register_blueprint(billing.billing_bp, url_prefix='/billing')
     init_celery(celery, app)
 
     register_commands(app)
@@ -34,6 +38,9 @@ def register_extensions(app):
     moment.init_app(app)
     
     login_manager.login_view = 'auth.login'
+    
+    stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
+    stripe.api_version = app.config.get('STRIPE_API_VERSION')
 
 
 def register_commands(app):

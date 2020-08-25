@@ -31,7 +31,10 @@ class Config:
     CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
     POSTS_PER_PAGE = 20
     SLOW_DB_QUERY_TIME = 1
-
+    STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
+    STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+    STRIPE_API_VERSION = '2020-03-02'
+    
     @staticmethod
     def init_app(app):
         pass
