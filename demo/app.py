@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
+
+import demo.commands as commands
 from demo.config import config
 from demo.extensions import db, bootstrap, mail, login_manager, migrate, celery, moment
 from demo.utils.celery import init_celery
@@ -11,19 +13,19 @@ def create_app(config_name='default'):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
-    configure_extensions(app)
+    register_extensions(app)
 
     from demo import main, auth, api
     app.register_blueprint(main.main_bp)
     app.register_blueprint(auth.auth_bp, url_prefix='/auth')
     app.register_blueprint(api.api_bp, url_prefix='/api/v1')
-
     init_celery(celery, app)
 
+    register_commands(app)
     return app
 
 
-def configure_extensions(app):
+def register_extensions(app):
     db.init_app(app)
     bootstrap.init_app(app)
     login_manager.init_app(app)
@@ -32,3 +34,9 @@ def configure_extensions(app):
     moment.init_app(app)
     
     login_manager.login_view = 'auth.login'
+
+
+def register_commands(app):
+    app.cli.add_command(commands.deploy)
+    app.cli.add_command(commands.clean)    
+    app.cli.add_command(commands.comment_test)
