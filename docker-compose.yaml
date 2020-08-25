@@ -7,6 +7,7 @@ x-demo: &demo
   environment:
     - FLASK_APP=run.py
     - FLASK_CONFIG=development
+    - PYTHONUNBUFFERED=true
   networks:
     - demo
   volumes:

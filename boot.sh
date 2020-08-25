@@ -8,4 +8,11 @@ while true; do
     echo Deploy command failed, retrying in 5 secs...
     sleep 5
 done
-exec gunicorn -b :5000 --access-logfile - --error-logfile - run:app
+
+# gunicorn enable --reload if in development mode
+if [ "${FLASK_CONFIG}" == "development" ]
+then 
+    exec gunicorn -b :5000 --access-logfile - --reload --error-logfile - run:app
+else
+    exec gunicorn -b :5000 --access-logfile - --error-logfile - run:app
+fi 
