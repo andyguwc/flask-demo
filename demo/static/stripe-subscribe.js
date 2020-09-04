@@ -1,7 +1,6 @@
-const button = document.querySelector('#buy_now_btn');
-
-button.addEventListener('click', (event) => {
-  fetch('/billing/stripe_pay')
+var call_checkout = function (event) {
+  var plan = event.target.id.split('submit_')[1];
+  fetch(`/subscription/stripe_pay?plan=${plan}`)
     .then((result) => {
       return result.json();
     })
@@ -20,4 +19,8 @@ button.addEventListener('click', (event) => {
           console.error('Error:', error);
         });
     });
+};
+
+document.querySelectorAll('.btn-subscribe').forEach((item) => {
+  item.addEventListener('click', call_checkout);
 });

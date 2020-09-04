@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% import '/macros/subscription.html' as macros %}
+
+{% block title %}Billing details and history{% endblock %}
+
+{% block page_content %}
+  {{ macros.upcoming_invoice(upcoming) }}
+  {{ macros.invoices(invoices) }}
+
+{% endblock %}

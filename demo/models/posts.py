@@ -5,6 +5,7 @@ from flask import url_for
 from demo.extensions import db
 from demo.exceptions import ValidationError
 
+
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)

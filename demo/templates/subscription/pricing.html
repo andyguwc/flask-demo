@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "macros/subscription.html" as macros with context %}
+
+{% block title %}Subscription Pricing {% endblock %}
+{% block page_content %}
+<div class="row">
+    {% call macros.plan(plans['0']) %}
+      <ul class="list-group list-group-flush text-center">
+        <li class="list-group-item">Lorem ipsum dolor sit amet</li>
+        <li class="list-group-item">Lorem ipsum dolor sit amet</li>
+        <li class="list-group-item strike">Dicta optio cumque dolore</li>
+        <li class="list-group-item strike">Dicta optio cumque dolore</li>
+        <li class="list-group-item strike">Consequuntur voluptatum</li>
+        <li class="list-group-item strike">Consequuntur voluptatum</li>
+      </ul>
+    {% endcall %}
+    {% call macros.plan(plans['1']) %}
+      <ul class="list-group list-group-flush text-center">
+        <li class="list-group-item">Lorem ipsum dolor sit amet</li>
+        <li class="list-group-item">Lorem ipsum dolor sit amet</li>
+        <li class="list-group-item">Dicta optio cumque dolore</li>
+        <li class="list-group-item">Dicta optio cumque dolore</li>
+        <li class="list-group-item strike">Consequuntur voluptatum</li>
+        <li class="list-group-item strike">Consequuntur voluptatum</li>
+      </ul>
+    {% endcall %}
+    {% call macros.plan(plans['2']) %}
+      <ul class="list-group list-group-flush text-center">
+        <li class="list-group-item">Lorem ipsum dolor sit amet</li>
+        <li class="list-group-item">Lorem ipsum dolor sit amet</li>
+        <li class="list-group-item">Dicta optio cumque dolore</li>
+        <li class="list-group-item">Dicta optio cumque dolore</li>
+        <li class="list-group-item">Consequuntur voluptatum</li>
+        <li class="list-group-item">Consequuntur voluptatum</li>
+      </ul>
+    {% endcall %}
+</div>
+{% endblock %}

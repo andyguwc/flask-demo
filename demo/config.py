@@ -31,9 +31,50 @@ class Config:
     CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
     POSTS_PER_PAGE = 20
     SLOW_DB_QUERY_TIME = 1
+    
+    # stripe configurations
     STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
     STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+    STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
     STRIPE_API_VERSION = '2020-03-02'
+    STRIPE_PLANS = {
+        '0': {
+            'id': 'bronze',
+            'name': 'Bronze',
+            'amount': 100,
+            'currency': 'usd',
+            'interval': 'month',
+            'interval_count': 1,
+            'trial_period_days': 14,
+            'statement_descriptor': 'BRONZE',
+            'metadata': {}
+        },
+        '1': {
+            'id': 'gold',
+            'name': 'Gold',
+            'amount': 500,
+            'currency': 'usd',
+            'interval': 'month',
+            'interval_count': 1,
+            'trial_period_days': 14,
+            'statement_descriptor': 'GOLD',
+            'metadata': {
+                'recommended': True
+            }
+        },
+        '2': {
+            'id': 'platinum',
+            'name': 'Platinum',
+            'amount': 1000,
+            'currency': 'usd',
+            'interval': 'month',
+            'interval_count': 1,
+            'trial_period_days': 14,
+            'statement_descriptor': 'PLATINUM',
+            'metadata': {}
+        }
+    }
+
     
     @staticmethod
     def init_app(app):
@@ -58,9 +99,9 @@ class ProductionConfig(Config):
         # log to stderr
         import logging
         from logging import StreamHandler
-        file_handler = StreamHandler()
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
+        handler = StreamHandler()
+        handler.setLevel(logging.INFO)
+        app.logger.addHandler(handler)
 
 config = {
     'development': DevelopmentConfig,

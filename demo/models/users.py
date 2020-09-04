@@ -5,11 +5,13 @@ from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer 
 
+from .mixins import ResourceMixin
 from .roles import Permission, Role
+from .subscriptions import Subscription, Invoice 
 from demo.extensions import db, login_manager
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, ResourceMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True)
@@ -23,6 +25,12 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    
+    # billing fields
+    payment_id = db.Column(db.String(128), index=True)
+    cancelled_subscription_on = db.Column(db.DateTime())
+    subscription = db.relationship('Subscription', backref='users', passive_deletes=True)
+    invoices = db.relationship('Invoice', backref='users', passive_deletes=True)
 
     def __init__(self, **kwargs):
         """Assign default role upon registration. FLASK ADMIN Role assigned to ADMIN Emails
@@ -129,6 +137,17 @@ class User(UserMixin, db.Model):
         except:
             return None
         return User.query.get(data['id'])
+
+    @staticmethod
+    def parse_event_checkout_completed(parsed_info):
+        """Parse checkout completed event and link customer to user
+        """
+        user = User.query.get(parsed_info['user_id'])
+        if not user:
+            return None
+        user.payment_id = parsed_info['stripe_customer_id']
+        user.cancelled_subscription_on = None
+        user.save()
 
     def to_json(self):
         json_user = {

@@ -3,9 +3,19 @@ import click
 import os
 
 from flask_migrate import upgrade
-from flask.cli import with_appcontext
+from flask import current_app
+from flask.cli import with_appcontext, AppGroup
 
+# from demo.app import create_app
 from demo.models import Role
+from demo.utils.stripecom import Plan as PaymentPlan
+
+from demo.extensions import db
+
+# Create an app context for the database connection.
+# app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+# db.app = app
+
 
 @click.command()
 @with_appcontext
@@ -39,3 +49,39 @@ def comment_test():
     """Test comment"""
     # add command group here https://flask.palletsprojects.com/en/0.12.x/cli/
     click.echo('Some command here')
+
+
+# add stripe commands
+stripe_cli = AppGroup('stripe')
+
+
+@stripe_cli.command()
+def sync_plans():
+    """
+    Sync (upsert) STRIPE_PLANS to Stripe.
+
+    :return: None
+    """
+    if current_app.config['STRIPE_PLANS'] is None:
+        return None
+
+    for _, value in current_app.config['STRIPE_PLANS'].items():
+        plan = PaymentPlan.retrieve(value.get('id'))
+
+        if plan:
+            PaymentPlan.update(id=value.get('id'),
+                               name=value.get('name'))
+        else:
+            PaymentPlan.create(**value)
+
+    return None
+
+
+@stripe_cli.command()
+def list_plans():
+    """
+    List all existing plans on Stripe.
+
+    :return: Stripe plans
+    """
+    click.echo(PaymentPlan.list())

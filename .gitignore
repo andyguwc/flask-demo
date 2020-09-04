@@ -4,3 +4,4 @@ __pycache__/
 dev
 .bash_history
 .python_history
+.vscode/
