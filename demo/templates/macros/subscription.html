@@ -1,7 +1,7 @@
 {% macro plan(plan) -%}
   <div class="col-md-4{{ ' scale-up' if plan.metadata.recommended }} {{ ' quarter-faded' if not plan.metadata.recommended }}">
-    <div class="panel panel-default{{ ' panel-danger' if plan.metadata.recommended }}">
-      <div class="panel-heading text-center"><h3>{{ plan.name }}</h3></div>
+    <div class="panel panel-default{{ ' panel-warning' if plan.metadata.recommended }}">
+      <div class="panel-heading text-center"><h3>{{ plan.nickname }}</h3></div>
       <div class="panel-body">
         {{ caller () }}
 

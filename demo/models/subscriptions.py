@@ -5,8 +5,6 @@ from flask import current_app
 
 from .mixins import ResourceMixin
 from demo.extensions import db, login_manager
-from demo.utils.stripecom import Subscription as PaymentSubscription
-from demo.utils.stripecom import Card as PaymentCard
 
 
 class Subscription(ResourceMixin, db.Model):
@@ -17,30 +15,6 @@ class Subscription(ResourceMixin, db.Model):
                                                   ondelete='CASCADE'),
                         index=True, nullable=False)
     plan = db.Column(db.String(128))
-    
-    def update(self, user, plan):
-        """Update an existing subscription
-        """
-        PaymentSubscription.update(user.payment_id, plan)
-        user.subscription.plan = plan
-        db.session.add(user.subscription)
-        db.session.commit()
-
-        return True
-    
-    def cancel(self, user, discard_credit_card=True):
-        """Cancel an existing subscription
-        """
-        PaymentSubscription.cancel(user.payment_id)
-        user.payment_id = None
-        user.cancelled_subscription_on = datetime.utcnow()
-        
-        db.session.add(user)
-        db.session.delete(user.subscription)
-
-        db.session.commit()
-
-        return True
 
 
 class Invoice(ResourceMixin, db.Model):
@@ -148,41 +122,3 @@ class Invoice(ResourceMixin, db.Model):
 
         return invoice
 
-
-class CreditCard(ResourceMixin, db.Model):
-    IS_EXPIRING_THRESHOLD_MONTHS = 2
-
-    __tablename__ = 'credit_cards'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id',
-                                                  onupdate='CASCADE',
-                                                  ondelete='CASCADE'),
-                        index=True, nullable=False)
-    # card details
-    brand = db.Column(db.String(32))
-    last4 = db.Column(db.Integer)
-    exp_date = db.Column(db.Date, index=True)
-    is_expiring = db.Column(db.Boolean(), nullable=False, default=False)
-
-    @classmethod
-    def is_expiring_soon(cls, compare_date=None, exp_date=None):
-        """Determine whether the credit card is expiring soon
-        """
-        return cls.IS_EXPIRING_THRESHOLD_MONTHS >= (
-            (compare_date.year - exp_date.year)*12 + \
-            (compare_date.month - exp_date.month)
-        )
-
-    @classmethod
-    def extract_card_params(cls, customer):
-        """Extract card info from a payment customer object
-        """
-        card_data = customer.source.data[0]
-        exp_date = datetime.date(card_data.exp_year, card_data.exp_month, 1)
-
-        return {
-            'brand': card_data.brand,
-            'last4': card_data.last4,
-            'exp_date': exp_date,
-            'is_expiring': cls.is_expiring_soon(exp_date=exp_date)
-        }

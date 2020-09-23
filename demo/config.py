@@ -48,7 +48,7 @@ class Config:
     STRIPE_PLANS = {
         '0': {
             'id': 'bronze',
-            'name': 'Bronze',
+            'nickname': 'Bronze',
             'amount': 100,
             'currency': 'usd',
             'interval': 'month',
@@ -59,7 +59,7 @@ class Config:
         },
         '1': {
             'id': 'gold',
-            'name': 'Gold',
+            'nickname': 'Gold',
             'amount': 500,
             'currency': 'usd',
             'interval': 'month',
@@ -72,7 +72,7 @@ class Config:
         },
         '2': {
             'id': 'platinum',
-            'name': 'Platinum',
+            'nickname': 'Platinum',
             'amount': 1000,
             'currency': 'usd',
             'interval': 'month',

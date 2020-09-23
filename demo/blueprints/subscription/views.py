@@ -8,9 +8,9 @@ from demo.models import Subscription, Invoice
 
 @subscription_bp.route('/pricing')
 def pricing():
-    # if already has subscription, return to update billing page
+    # if already has subscription, return to billing details page
     if current_user.is_authenticated and current_user.subscription:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('subscription.billing_details'))
 
     return render_template('subscription/pricing.html', 
                             plans=current_app.config['STRIPE_PLANS'])

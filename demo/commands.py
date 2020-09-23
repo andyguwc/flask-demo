@@ -7,8 +7,12 @@ from flask import current_app
 from flask.cli import with_appcontext, AppGroup
 
 from demo.models import Role
-from demo.utils.stripecom import Plan as PaymentPlan
 from demo.extensions import db
+
+
+"""
+Additional Flask Commands
+"""
 
 
 @click.command()
@@ -54,13 +58,15 @@ def sync_plans():
         return None
 
     for _, value in current_app.config['STRIPE_PLANS'].items():
-        plan = PaymentPlan.retrieve(value.get('id'))
-
-        if plan:
-            PaymentPlan.update(id=value.get('id'),
-                               name=value.get('name'))
-        else:
-            PaymentPlan.create(**value)
+        try:
+            plan = stripe.Plan.retrieve(value.get('id'))
+            if plan:
+                plan.nickname = value.get('nickname')
+                plan.save()
+            else:
+                stripe.Plan.create(product={'name': 'Subscription'}, **value)
+        except stripe.error.StripeError as e:
+            print(e)
 
     return None
 
@@ -72,4 +78,4 @@ def list_plans():
 
     :return: Stripe plans
     """
-    click.echo(PaymentPlan.list())
+    click.echo(stripe.Plan.list())
