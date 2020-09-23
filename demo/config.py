@@ -7,6 +7,8 @@ class Config:
     FLASK_APP = 'run.py'
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Email configs
     MAIL_SERVER = os.getenv('MAIL_SERVER','smtp.googlemail.com')
     MAIL_PORT = int(os.getenv('MAIL_PORT', '587'))
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in \
@@ -16,6 +18,8 @@ class Config:
     MAIL_SUBJECT_PREFIX = '[TEST]'
     MAIL_SENDER_DEFAULT = 'FLASK DEVELOPMENT <flask@example.com>'
     DEMO_ADMIN = os.environ.get('DEMO_ADMIN')
+    
+    # OAuth credentials
     OAUTH_CREDENTIALS = {
         'github': {
             'client_id': os.environ.get('GITHUB_CLIENT_ID'),
@@ -27,12 +31,16 @@ class Config:
         }
     }
     OAUTHLIB_INSECURE_TRANSPORT='1'
+    
+    # Celery configs
     CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
     CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+    
+    # SQL configs
     POSTS_PER_PAGE = 20
     SLOW_DB_QUERY_TIME = 1
     
-    # stripe configurations
+    # Stripe configs
     STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
     STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
     STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
@@ -75,7 +83,6 @@ class Config:
         }
     }
 
-    
     @staticmethod
     def init_app(app):
         pass
@@ -102,6 +109,7 @@ class ProductionConfig(Config):
         handler = StreamHandler()
         handler.setLevel(logging.INFO)
         app.logger.addHandler(handler)
+
 
 config = {
     'development': DevelopmentConfig,

@@ -1,6 +1,12 @@
+# -*- coding: utf-8 -*-
 from flask import current_app, url_for, request, redirect, session
 from flask_login import current_user, login_user, logout_user, login_required
 from requests_oauthlib import OAuth2Session
+
+"""
+Define OAuth objects
+"""
+
 
 class OAuthSignIn(object):
     """Wrapper around OAuth providers to provide consistent interface

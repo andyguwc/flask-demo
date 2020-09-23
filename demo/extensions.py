@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from celery import Celery
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap

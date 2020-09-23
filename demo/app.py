@@ -20,7 +20,7 @@ def create_app(config_name='default'):
     register_extensions(app)
     register_template_processors(app)
 
-    from demo import main, auth, api, billing, subscription
+    from demo.blueprints import main, auth, api, billing, subscription
     app.register_blueprint(main.main_bp)
     app.register_blueprint(auth.auth_bp, url_prefix='/auth')
     app.register_blueprint(api.api_bp, url_prefix='/api/v1')
@@ -54,8 +54,8 @@ def register_commands(app):
     """
     app.cli.add_command(commands.deploy)
     app.cli.add_command(commands.clean)    
-    app.cli.add_command(commands.comment_test)
     app.cli.add_command(commands.stripe_cli)
+
 
 def register_template_processors(app):
     """Register custom functions to use in jinja2 templates

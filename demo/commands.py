@@ -6,21 +6,16 @@ from flask_migrate import upgrade
 from flask import current_app
 from flask.cli import with_appcontext, AppGroup
 
-# from demo.app import create_app
 from demo.models import Role
 from demo.utils.stripecom import Plan as PaymentPlan
-
 from demo.extensions import db
-
-# Create an app context for the database connection.
-# app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-# db.app = app
 
 
 @click.command()
 @with_appcontext
 def deploy():
-    """Run deployment tasks."""
+    """Run deployment tasks. Called upon app initialization
+    """
     # migrate database to latest revision
     upgrade()
 
@@ -42,13 +37,6 @@ def clean():
                 full_pathname = os.path.join(dirpath, filename)
                 click.echo('Removing {}'.format(full_pathname))
                 os.remove(full_pathname)
-
-
-@click.command()
-def comment_test():
-    """Test comment"""
-    # add command group here https://flask.palletsprojects.com/en/0.12.x/cli/
-    click.echo('Some command here')
 
 
 # add stripe commands

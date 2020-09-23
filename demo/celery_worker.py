@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os 
 from demo.app import create_app
 from demo.utils.celery import init_celery

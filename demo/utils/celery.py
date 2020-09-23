@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 def init_celery(celery, app):
     celery.conf.broker_url = app.config["CELERY_BROKER_URL"]
     celery.conf.result_backend = app.config["CELERY_RESULT_BACKEND"]
